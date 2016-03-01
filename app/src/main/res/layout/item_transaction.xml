@@ -1,0 +1,70 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+
+    <View android:id="@+id/sidebar"
+        android:layout_alignParentLeft="true"
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:background="@color/green" />
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/sidebar"
+        android:id="@+id/transactionID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order 645b3bb04a1"
+        android:layout_marginLeft="5dp"
+        android:textColor="#000"
+        android:textSize="16sp" />
+    <TextView
+        android:id="@+id/transactionTimestamp"
+        android:layout_toRightOf="@id/sidebar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/transactionID"
+        android:text="2015-09-06T00:46:17.000Z"
+        android:textSize="12sp" />
+    <TextView
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/sidebar"
+        android:id="@+id/transactionDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/transactionTimestamp"
+        android:textColor="#000"
+        android:text="UBER Order #64c9a79602e"
+        android:textSize="14sp" />
+    <TextView
+        android:id="@+id/transactionState"
+        android:layout_toRightOf="@id/sidebar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/transactionDescription"
+        android:text="VERIFIED"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/actionMore"
+        android:layout_margin="10dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_action_more"/>
+    <TextView
+        android:id="@+id/transactionAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/actionMore"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000"
+        android:layout_marginTop="10dp"
+        android:text="Rs. 250"/>
+
+</RelativeLayout> 

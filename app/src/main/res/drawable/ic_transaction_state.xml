@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.mb14.halfpenny">
+    <item app:state_transaction_verified="true"
+        app:state_transaction_unverified="false"
+        app:state_transaction_fraudulent="false"
+      android:drawable="@drawable/shape_circle_green"/>
+    <item app:state_transaction_verified="false"
+        app:state_transaction_unverified="true"
+        app:state_transaction_fraudulent="false"
+        android:drawable="@drawable/shape_circle_yellow"/>
+    <item app:state_transaction_verified="false"
+        app:state_transaction_unverified="false"
+        app:state_transaction_fraudulent="true"
+        android:drawable="@drawable/shape_circle_red"/>
+
+</selector>
