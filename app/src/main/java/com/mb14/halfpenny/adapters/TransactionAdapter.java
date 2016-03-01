@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.mb14.halfpenny.api.jsonblob.Expenses;
 import com.mb14.halfpenny.api.jsonblob.JSONBlob;
 import com.mb14.halfpenny.api.jsonblob.Transaction;
-import com.mb14.halfpenny.widget.TransactionStateIconView;
 import com.mb14.halfpenny.R;
 
 
