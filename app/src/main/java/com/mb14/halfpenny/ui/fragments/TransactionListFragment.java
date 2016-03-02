@@ -4,10 +4,13 @@ package com.mb14.halfpenny.ui.fragments;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.mb14.halfpenny.R;
 import com.mb14.halfpenny.adapters.TransactionAdapter;
@@ -52,10 +55,7 @@ public class TransactionListFragment extends Fragment implements TransactionAdap
     private void initProgressDialog() {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(false);
-        progressDialog.setIndeterminate(false);
-        progressDialog.setTitle("Updating expenses");
+        progressDialog.setIndeterminate(true);
     }
 
     @Override
@@ -84,7 +84,8 @@ public class TransactionListFragment extends Fragment implements TransactionAdap
 
             @Override
             public void onFailure(Throwable t) {
-
+                Toast.makeText(getActivity(),"Error updating expenses",Toast.LENGTH_SHORT).show();
+                Log.d("com.mb14.halfpenny", t.getMessage());
             }
         });
 
@@ -101,9 +102,16 @@ public class TransactionListFragment extends Fragment implements TransactionAdap
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(response.isSuccess())
-                                if(!response.body().equals(adapter.getExpenses()))
-                                adapter.updateExpenses(response.body());
+                            if(response.isSuccess()) {
+                                if (!response.body().equals(adapter.getExpenses()))
+                                    adapter.updateExpenses(response.body());
+                            }
+                            else{
+                                Toast.makeText(getActivity(),"Error updating expenses",Toast.LENGTH_SHORT).show();
+                            }
+                                if(progressDialog.isShowing())
+                                progressDialog.dismiss();
+
                         }
                     });
 
@@ -128,6 +136,8 @@ public class TransactionListFragment extends Fragment implements TransactionAdap
         threadpool = new ScheduledThreadPoolExecutor(1);
         //Poll after every 10 seconds
         threadpool.scheduleWithFixedDelay(new FetchExpensesTask(), 0, 10, TimeUnit.SECONDS);
+        progressDialog.setTitle("Fetching expenses...");
+        progressDialog.show();
     }
 
 }
