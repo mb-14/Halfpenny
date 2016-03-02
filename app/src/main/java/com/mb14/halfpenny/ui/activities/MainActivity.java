@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mb14.halfpenny.R;
+import com.mb14.halfpenny.api.jsonblob.Transaction;
 import com.mb14.halfpenny.ui.fragments.TransactionListFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,7 +47,16 @@ class SlidingPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return TransactionListFragment.newInstance(TransactionListFragment.CATEGORY_ALL);
+        switch(position){
+            case 0:
+                return TransactionListFragment.newInstance(Transaction.CATEGORY_ALL);
+            case 1:
+                return TransactionListFragment.newInstance(Transaction.CATEGORY_TAXI);
+            case 2:
+                return TransactionListFragment.newInstance(Transaction.CATEGORY_RECHARGE);
+
+        }
+        return TransactionListFragment.newInstance(Transaction.CATEGORY_ALL);
     }
 
     @Override

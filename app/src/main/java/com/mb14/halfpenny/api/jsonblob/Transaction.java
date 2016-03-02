@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
  * Created by mb-14 on 01/03/16.
  */
 public class Transaction {
+    public static final int CATEGORY_ALL = 0;
+    public static final int CATEGORY_TAXI = 1;
+    public static final int CATEGORY_RECHARGE = 2;
     @SerializedName("id")
     private String id;
     @SerializedName("description")
@@ -63,5 +66,21 @@ public class Transaction {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public boolean equals(Transaction other){
+        if(!id.equals(other.id))
+                return false;
+        if(!description.equals(other.description))
+                return false;
+        if(!time.equals(other.time))
+                return false;
+        if(amount != other.amount)
+            return false;
+        if(!state.equals(other.state))
+            return false;
+        if (!category.equals(other.category))
+            return false;
+        return true;
     }
 }

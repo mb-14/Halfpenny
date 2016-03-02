@@ -8,11 +8,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mb14.halfpenny.api.jsonblob.Expenses;
 import com.mb14.halfpenny.api.jsonblob.JSONBlob;
@@ -33,9 +33,15 @@ import retrofit2.Response;
 public class TransactionAdapter extends BaseAdapter{
     Context context;
     Expenses expenses;
-    ProgressDialog progressDialog;
+    int category;
     DateFormat iso8601DateFormat;
     DateFormat standardDateFormat;
+    OnTransactionUpdateListener onTransactionUpdateListener;
+
+    public Expenses getExpenses() {
+        return expenses;
+    }
+
 
     private static class ViewHolder {
         TextView tvTransactionID;
@@ -46,29 +52,30 @@ public class TransactionAdapter extends BaseAdapter{
         View sideBar;
         ImageView actionMore;
     }
-
-    public TransactionAdapter(Context context){
+    public interface OnTransactionUpdateListener{
+         void onTransactionUpdate(Expenses expenses);
+    }
+    public TransactionAdapter(Context context, int category ,OnTransactionUpdateListener onUpdateListener){
         expenses = new Expenses();
         this.context = context;
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        this.category = category;
+        this.onTransactionUpdateListener = onUpdateListener;
         iso8601DateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         standardDateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
-        refreshExpenses();
     }
     @Override
     public int getCount() {
-        return expenses.getTransactions().size();
+        return expenses.getTransactions(category).size();
     }
 
     @Override
     public Transaction getItem(int position) {
-        return expenses.getTransactions().get(position);
+        return expenses.getTransactions(category).get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return 0;
     }
 
     @Override
@@ -115,16 +122,16 @@ public class TransactionAdapter extends BaseAdapter{
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case 0:
-                                expenses.getTransactions().get(position).setState("verified");
+                                expenses.getTransaction(transaction.getId()).setState("verified");
                                 break;
                             case 1:
-                                expenses.getTransactions().get(position).setState("unverified");
+                                expenses.getTransaction(transaction.getId()).setState("unverified");
                                 break;
                             case 2:
-                                expenses.getTransactions().get(position).setState("fraudulent");
+                                expenses.getTransaction(transaction.getId()).setState("fraudulent");
                                 break;
                         }
-                        updateExpenses();
+                        onTransactionUpdateListener.onTransactionUpdate(expenses);
                         return false;
                     }
                 });
@@ -149,45 +156,13 @@ public class TransactionAdapter extends BaseAdapter{
         return R.color.yellow;
     }
 
-    private void updateExpenses() {
-        Call<Expenses> call = JSONBlob.getService().updateExpenses(expenses);
-        progressDialog.setTitle("Updating expenses...");
-        progressDialog.show();
-        call.enqueue(new Callback<Expenses>() {
-            @Override
-            public void onResponse(Response<Expenses> response) {
-                if(response.isSuccess()) {
-                    expenses = response.body();
-                    notifyDataSetChanged();
-                    progressDialog.dismiss();
-                }
-            }
 
-            @Override
-            public void onFailure(Throwable t) {
+    public void updateExpenses(Expenses result) {
+        expenses = result;
+        expenses.generateCategories();
 
-            }
-        });
+        notifyDataSetChanged();
+        Toast.makeText(context,"Expenses updated",Toast.LENGTH_SHORT).show();
     }
 
-    private void refreshExpenses(){
-        Call<Expenses> call = JSONBlob.getService().getExpenses();
-        progressDialog.setTitle("Fetching expenses...");
-        progressDialog.show();
-        call.enqueue(new Callback<Expenses>() {
-            @Override
-            public void onResponse(Response<Expenses> response) {
-                if(response.isSuccess()){
-                    expenses = response.body();
-                    notifyDataSetChanged();
-                    progressDialog.dismiss();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        });
-    }
 }
